@@ -13,8 +13,12 @@ Plug 'shaunsingh/solarized.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+" Completion
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/nvim-cmp'
+
+" Linters
+Plug 'mfussenegger/nvim-lint'
 
 " Haskell Language Server config down below [HLScdb]
 
@@ -53,9 +57,9 @@ set hidden
 "Show current line
 "set cursorline
 
-syntax enable
-syntax on
-filetype on
+"syntax enable
+"syntax on
+"filetype on
 set number
 "set cursorline
 "set cuc
@@ -85,7 +89,7 @@ let g:haddock_browser="/usr/bin/firefox"
 set backspace=2
 
 
-let g:markdown_fenced_languages = ['css', 'elixir', 'ex=elixir', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'xml', 'html']
+"let g:markdown_fenced_languages = ['css', 'elixir', 'ex=elixir', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'xml', 'html']
 
 set termguicolors
 
@@ -99,3 +103,4 @@ require('tree-sitter')
 require('lsp')
 require('terminal')
 require('cmp-lsp')
+require('linters')

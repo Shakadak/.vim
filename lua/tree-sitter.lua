@@ -3,6 +3,11 @@ require('nvim-treesitter.configs').setup {
         "eex",
         "elixir",
         "erlang",
+        "lua",
+        "markdown",
+        "haskell",
+        "javascript",
+        "typescript",
     },
   ---[[
   highlight = {
