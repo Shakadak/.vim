@@ -24,13 +24,15 @@ vim.lsp.enable("elixirls")
 -- }
 
 vim.lsp.enable("elixirls")
-vim.lsp.enable("erlangls")
+-- vim.lsp.enable("erlangls")
+require('lspconfig').erlangls.setup{}
 
 require('lspconfig').purescriptls.setup{
 }
 
-require('lspconfig').ts_ls.setup{
-}
+-- require('lspconfig').ts_ls.setup{
+-- }
+vim.lsp.enable("ts_ls")
 
 vim.cmd([[
 nnoremap <silent> gD        <cmd>lua vim.lsp.buf.implementation()<CR>
@@ -50,8 +52,9 @@ vim.keymap.set('n', '<leader>en', vim.diagnostic.goto_next, { silent = true, })
 vim.keymap.set('n', '<leader>eo', vim.diagnostic.open_float, { silent = true, })
 
 vim.diagnostic.config({
+    virtual_text = true,
     -- virtual_text = {current_line = true},
-    virtual_lines = {
-        current_line = true,
-    },
+    --virtual_lines = {
+    --    current_line = true,
+    --},
 })
