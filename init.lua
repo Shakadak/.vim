@@ -65,8 +65,8 @@ set number
 "set cuc
 "set mouse=a
 set expandtab
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 "au BufWinEnter * let w:m2=matchadd('Tab', '\t', -1)
 "au BufWinEnter * let w:m3=matchadd('Space', '\s\+$\| \+\ze\t', -1)
 "set list listchars=tab:▸\ ,trail:·

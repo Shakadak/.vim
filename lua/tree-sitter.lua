@@ -1,14 +1,15 @@
 require('nvim-treesitter.configs').setup {
-    ensure_installed = {
-        "eex",
-        "elixir",
-        "erlang",
-        "lua",
-        "markdown",
-        "haskell",
-        "javascript",
-        "typescript",
-    },
+  ensure_installed = {
+    "eex",
+    "elixir",
+    "erlang",
+    "lua",
+    "markdown",
+    "haskell",
+    "javascript",
+    "tsx",
+    "typescript",
+  },
   ---[[
   highlight = {
     enable = true,
@@ -19,17 +20,19 @@ require('nvim-treesitter.configs').setup {
     -- additional_vim_regex_highlighting = { 'elixir' },
   },
   --]]
+  ---[[
   indent = {
     enable = true
   },
+  --]]
   incremental_selection = {
-      enable = true,
-      keymaps = {
-          init_selection = "<CR>",
-          node_incremental = "<CR>",
-          scope_incremental = "<Tab>",
-          node_decremental = "<S-Tab>",
-      },
+    enable = true,
+    keymaps = {
+      init_selection = "<CR>",
+      node_incremental = "<CR>",
+      scope_incremental = "<Tab>",
+      node_decremental = "<S-Tab>",
+    },
   },
 }
 
