@@ -7,9 +7,14 @@ require('lspconfig').hls.setup{
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 vim.lsp.config("elixirls", {
-    -- cmd = { "/home/nathanael/.local/bin/elixirls/language_server.sh" }
-    cmd = { "elixir-ls" },
-    capabilities = capabilities,
+  -- cmd = { "/home/nathanael/.local/bin/elixirls/language_server.sh" }
+  cmd = { "elixir-ls" },
+  capabilities = capabilities,
+  settings = {
+    elixirLS = {
+      incrementalDialyzer = true,
+    }
+  },
 })
 
 vim.lsp.enable("elixirls")
@@ -33,6 +38,14 @@ require('lspconfig').purescriptls.setup{
 -- require('lspconfig').ts_ls.setup{
 -- }
 vim.lsp.enable("ts_ls")
+vim.lsp.config("ts_ls", {
+  cmd = {"npm", "run", "typescript-language-server", "--", "--stdio"},
+})
+
+vim.lsp.enable("cssls")
+vim.lsp.config("cssls", {
+  cmd = {"npm", "run", "vscode-css-language-server", "--", "--stdio"},
+})
 
 vim.cmd([[
 nnoremap <silent> gD        <cmd>lua vim.lsp.buf.implementation()<CR>

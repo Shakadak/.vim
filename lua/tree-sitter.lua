@@ -1,12 +1,16 @@
 require('nvim-treesitter.configs').setup {
   ensure_installed = {
+    "css",
     "eex",
     "elixir",
     "erlang",
+    "heex",
+    "html",
     "lua",
     "markdown",
     "haskell",
     "javascript",
+    "json",
     "tsx",
     "typescript",
   },
