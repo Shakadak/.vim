@@ -30,6 +30,12 @@ Plug 'rust-lang/rust.vim'
 " Haskell
 Plug 'neovimhaskell/haskell-vim'
 
+" Idris
+" Plug 'neovim/nvim-lspconfig'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'idris-community/idris2-nvim'
+
+
 " Elixir
 "Plug 'elixir-editors/vim-elixir'
 

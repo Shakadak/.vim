@@ -1,6 +1,5 @@
 -- Haskell Language Server config [HLScdb]
-require('lspconfig').hls.setup{
-}
+vim.lsp.enable('hls')
 
 -- Set up lspconfig.
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
@@ -19,43 +18,31 @@ vim.lsp.config("elixirls", {
 
 vim.lsp.enable("elixirls")
 
--- require('lspconfig').elixirls.setup{
---     -- cmd = { "/home/nathanael/.local/bin/elixirls/language_server.sh" }
---     cmd = { "elixir-ls" },
---     capabilities = capabilities,
--- }
-
--- require('lspconfig').erlangls.setup{
--- }
 
 vim.lsp.enable("elixirls")
--- vim.lsp.enable("erlangls")
-require('lspconfig').erlangls.setup{}
+vim.lsp.enable("erlangls")
+vim.lsp.enable("purescriptls")
 
-require('lspconfig').purescriptls.setup{
-}
-
--- require('lspconfig').ts_ls.setup{
--- }
-vim.lsp.enable("ts_ls")
 vim.lsp.config("ts_ls", {
   cmd = {"npm", "run", "typescript-language-server", "--", "--stdio"},
 })
+vim.lsp.enable("ts_ls")
 
 vim.lsp.enable("cssls")
 vim.lsp.config("cssls", {
   cmd = {"npm", "run", "vscode-css-language-server", "--", "--stdio"},
 })
 
-vim.cmd([[
-nnoremap <silent> gD        <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k>     <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> 1gD       <cmd>lua vim.lsp.buf.type_definition()<CR>
-"nnoremap <silent> gr        <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0        <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW        <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <silent> gd        <cmd>lua vim.lsp.buf.declaration()<CR>
-]])
+-- Idris2 config
+require('lsp/idris')
+
+vim.keymap.set('n', 'gD', vim.lsp.buf.implementation, {silent = true})
+vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
+vim.keymap.set('n', '1gD', vim.lsp.buf.type_definition, {silent = true})
+-- vim.keymap.set('n', 'gr', vim.lsp.buf.refrences, {silent = true})
+vim.keymap.set('n', 'g0', vim.lsp.buf.document_symbol, {silent = true})
+vim.keymap.set('n', 'gW', vim.lsp.buf.workspace_symbol, {silent = true})
+vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, {silent = true})
 
 vim.keymap.set('n', '<c-]>', vim.lsp.buf.definition, { silent = true, })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { silent = true, })
