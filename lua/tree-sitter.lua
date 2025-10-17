@@ -42,11 +42,18 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
-vim.cmd([[
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-set nofoldenable                     " Disable folding at startup.
-]])
+-- vim.cmd([[
+-- " set foldmethod=expr
+-- " set foldexpr=nvim_treesitter#foldexpr()
+-- " set nofoldenable                     " Disable folding at startup.
+-- ]])
+
+-- Disable folding at startup.
+-- https://neovim.io/doc/user/options.html#'foldenable'
+vim.opt.foldenable = false
+-- https://neovim.io/doc/user/options.html#'foldexpr'
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldmethod = "expr"
 
 -- Highlight @foo.bar as "Identifier" only in Lua files
 vim.api.nvim_set_hl(0, "@variable.elixir", { ctermfg = "NONE"})

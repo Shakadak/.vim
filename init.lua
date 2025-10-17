@@ -58,7 +58,7 @@ call plug#end()
 "set wildmode=list:longest
 
 " Required for operations modifying multiple buffers like rename.
-set hidden
+" set hidden
 
 "Show current line
 "set cursorline
@@ -66,13 +66,13 @@ set hidden
 "syntax enable
 "syntax on
 "filetype on
-set number
+" set number
 "set cursorline
 "set cuc
 "set mouse=a
-set expandtab
-set tabstop=2
-set shiftwidth=2
+" set expandtab
+" set tabstop=2
+" set shiftwidth=2
 "au BufWinEnter * let w:m2=matchadd('Tab', '\t', -1)
 "au BufWinEnter * let w:m3=matchadd('Space', '\s\+$\| \+\ze\t', -1)
 "set list listchars=tab:▸\ ,trail:·
@@ -88,18 +88,39 @@ set shiftwidth=2
 "set background=light
 "let g:solarized_termcolors=256
 "colorscheme solarized
-set cursorline
+" set cursorline
 
-let g:haddock_browser="/usr/bin/firefox"
+" let g:haddock_browser="/usr/bin/firefox"
 
-set backspace=2
+" set backspace=2
 
 
 "let g:markdown_fenced_languages = ['css', 'elixir', 'ex=elixir', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'xml', 'html']
 
-set termguicolors
+" set termguicolors
 
 ]])
+
+-- Required for operations modifying multiple buffers like rename.
+-- https://neovim.io/doc/user/options.html#'hidden'
+vim.opt.hidden = true
+
+vim.opt.number = true
+vim.opt.cursorline = true
+-- vim.opt.cursorcolumn = true
+vim.api.nvim_create_autocmd({"WinLeave"}, {
+  callback = function() vim.opt.cursorcolumn = false end
+})
+vim.api.nvim_create_autocmd({"WinEnter"}, {
+  callback = function() vim.opt.cursorcolumn = true end
+})
+
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 0
+
+-- https://neovim.io/doc/user/options.html#'termguicolors'
+-- vim.opt.termguicolors = true
 
 -- Color Scheme
 require('solarized').set()

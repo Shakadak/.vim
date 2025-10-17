@@ -58,7 +58,7 @@ vim.keymap.set({ 'i', 's' }, '<Tab>', function()
     else
         return '<Tab>'
     end
-end, { expr = true })
+end, { expr = true, silent = true })
 
 vim.keymap.set({ 'i', 's' }, '<S-Tab>', function()
     if vim.snippet.active({ direction = -1 }) then
@@ -66,4 +66,4 @@ vim.keymap.set({ 'i', 's' }, '<S-Tab>', function()
     else
         return '<S-Tab>'
     end
-end, { expr = true })
+end, { expr = true, silent = true })
