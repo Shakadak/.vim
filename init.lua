@@ -61,12 +61,12 @@ vim.opt.hidden = true
 vim.opt.number = true
 vim.opt.cursorline = true
 -- vim.opt.cursorcolumn = true
-vim.api.nvim_create_autocmd({"WinLeave"}, {
-  callback = function() vim.opt.cursorcolumn = false end
-})
-vim.api.nvim_create_autocmd({"WinEnter"}, {
-  callback = function() vim.opt.cursorcolumn = true end
-})
+-- vim.api.nvim_create_autocmd({"WinLeave"}, {
+--   callback = function() vim.opt.cursorcolumn = false end
+-- })
+-- vim.api.nvim_create_autocmd({"WinEnter"}, {
+--   callback = function() vim.opt.cursorcolumn = true end
+-- })
 
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
