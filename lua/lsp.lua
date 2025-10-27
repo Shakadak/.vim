@@ -1,6 +1,3 @@
--- Haskell Language Server config [HLScdb]
-vim.lsp.enable('hls')
-
 -- Set up lspconfig.
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -16,22 +13,14 @@ vim.lsp.config("elixirls", {
   },
 })
 
-vim.lsp.enable("elixirls")
-
-
+-- Haskell Language Server config [HLScdb]
+vim.lsp.enable('hls')
 vim.lsp.enable("elixirls")
 vim.lsp.enable("erlangls")
 vim.lsp.enable("purescriptls")
-
-vim.lsp.config("ts_ls", {
-  cmd = {"npm", "run", "typescript-language-server", "--", "--stdio"},
-})
 vim.lsp.enable("ts_ls")
-
 vim.lsp.enable("cssls")
-vim.lsp.config("cssls", {
-  cmd = {"npm", "run", "vscode-css-language-server", "--", "--stdio"},
-})
+vim.lsp.enable("jsonls")
 
 -- Idris2 config
 require('lsp/idris')
@@ -54,7 +43,7 @@ vim.keymap.set('n', '<leader>eo', vim.diagnostic.open_float, { silent = true, })
 vim.diagnostic.config({
     virtual_text = true,
     -- virtual_text = {current_line = true},
-    --virtual_lines = {
+    -- virtual_lines = {
     --    current_line = true,
     --},
 })
