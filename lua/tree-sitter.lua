@@ -4,6 +4,7 @@ require('nvim-treesitter.configs').setup {
     "eex",
     "elixir",
     "erlang",
+    "gdscript",
     "haskell",
     "heex",
     "html",

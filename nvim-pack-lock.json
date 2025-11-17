@@ -1,0 +1,36 @@
+{
+  "plugins": {
+    "cmp": {
+      "rev": "d97d85e01339f01b842e6ec1502f639b080cb0fc",
+      "src": "https://github.com/hrsh7th/nvim-cmp.git"
+    },
+    "cmp_nvim_lsp": {
+      "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp.git"
+    },
+    "idris2": {
+      "rev": "19dcf61737293365c23c890ca622fa34aeb12780",
+      "src": "https://github.com/idris-community/idris2-nvim"
+    },
+    "lint": {
+      "rev": "baf7c91c2b868b12446df511d4cdddc98e9bf66e",
+      "src": "https://github.com/mfussenegger/nvim-lint.git"
+    },
+    "nui": {
+      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
+      "src": "https://github.com/MunifTanjim/nui.nvim"
+    },
+    "nvim-lspconfig": {
+      "rev": "abf6d190f2c06818489c0bd4b926e7e3a06c5e51",
+      "src": "https://github.com/neovim/nvim-lspconfig.git"
+    },
+    "nvim-treesitter": {
+      "rev": "42fc28ba918343ebfd5565147a42a26580579482",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter.git"
+    },
+    "solarized": {
+      "rev": "fe02ed49cc017cc93657bd6306a2624394611c69",
+      "src": "https://github.com/shaunsingh/solarized.nvim.git"
+    }
+  }
+}

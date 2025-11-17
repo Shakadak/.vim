@@ -1,58 +1,117 @@
 -- https://www.notonlycode.org/neovim-lua-config/
 -- https://neovim.io/doc/user/lua-guide.html
 
-vim.cmd([[
-set nocompatible              " be iMproved, required
+-- vim.pack.add({
+--   -- Install "plug" and use default branch (usually `main` or `master`)
+--   -- Specify plugin's name (here the plugin will be called "plug"
+--   -- instead of "vim-plug")
+--   { src = 'https://github.com/junegunn/vim-plug.git', name = 'plug' }
+-- }, {
+--   load = true
+-- })
 
-call plug#begin()
-" General
-" Plug 'altercation/vim-colors-solarized'
-Plug 'shaunsingh/solarized.nvim'
+vim.pack.add({
+  { src = 'https://github.com/neovim/nvim-lspconfig.git' },
+})
 
-" Language Client
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+vim.pack.add({
+  { src = 'https://github.com/shaunsingh/solarized.nvim.git', name = 'solarized' },
+})
 
-" Completion
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/nvim-cmp'
+vim.pack.add({
+  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp.git', name = 'cmp_nvim_lsp' },
+  { src = 'https://github.com/hrsh7th/nvim-cmp.git', name = 'cmp' },
+})
 
-" Linters
-Plug 'mfussenegger/nvim-lint'
+vim.pack.add({
+  { src = 'https://github.com/mfussenegger/nvim-lint.git', name = 'lint' },
+})
 
-" Haskell Language Server config down below [HLScdb]
+vim.api.nvim_create_autocmd({"PackChanged"}, {
+  callback = function(event)
+    local name = event.data.spec.name
+    local kind = event.data.kind
 
-" Rust
-Plug 'rust-lang/rust.vim'
+    if name == 'nvim-treesitter' and (kind == 'install' or kind == 'update') then
+      if not event.data.active then
+        vim.cmd.packadd('nvim-treesitter')
+      end
+      vim.cmd('TSUpdate')
+    end
+  end
+})
 
-" Plug 'idris-hackers/idris-vim'
-
-" Haskell
-Plug 'neovimhaskell/haskell-vim'
-
-" Idris
-" Plug 'neovim/nvim-lspconfig'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'idris-community/idris2-nvim'
+vim.pack.add({
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter.git' },
+})
 
 
-" Elixir
-"Plug 'elixir-editors/vim-elixir'
+-- " Idris
+-- " Plug 'neovim/nvim-lspconfig'
+vim.pack.add({
+  { name = 'nui', src = 'https://github.com/MunifTanjim/nui.nvim' },
+  { name = 'idris2', src = 'https://github.com/idris-community/idris2-nvim'},
+})
 
-" Javascript
-Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'js', 'jsx', 'javascript.jsx']}
-Plug 'mxw/vim-jsx', { 'for': ['javascript', 'js', 'jsx', 'javascript.jsx']}
 
-" Reason
-Plug 'reasonml-editor/vim-reason-plus'
+-- vim.pack.add({
+--   { name = 'nui', src = 'https://github.com/' },
+-- })
+-- Plug 'MunifTanjim/nui.nvim'
+-- Plug 'idris-community/idris2-nvim'
 
-" Purescript
-Plug 'purescript-contrib/purescript-vim'
-
-call plug#end()
-
-"Put your custom Vim configuration here
-]])
+-- vim.call('plug#begin')
+-- 
+-- vim.cmd([[
+-- " General
+-- " Plug 'altercation/vim-colors-solarized'
+-- Plug 'shaunsingh/solarized.nvim'
+-- 
+-- " Language Client
+-- Plug 'neovim/nvim-lspconfig'
+-- Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+-- 
+-- " Completion
+-- Plug 'hrsh7th/cmp-nvim-lsp'
+-- Plug 'hrsh7th/nvim-cmp'
+-- 
+-- " Linters
+-- Plug 'mfussenegger/nvim-lint'
+-- 
+-- " Haskell Language Server config down below [HLScdb]
+-- 
+-- " Rust
+-- Plug 'rust-lang/rust.vim'
+-- 
+-- " Plug 'idris-hackers/idris-vim'
+-- 
+-- " Haskell
+-- Plug 'neovimhaskell/haskell-vim'
+-- 
+-- " Idris
+-- " Plug 'neovim/nvim-lspconfig'
+-- Plug 'MunifTanjim/nui.nvim'
+-- Plug 'idris-community/idris2-nvim'
+-- 
+-- 
+-- " Elixir
+-- "Plug 'elixir-editors/vim-elixir'
+-- 
+-- " Javascript
+-- Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'js', 'jsx', 'javascript.jsx']}
+-- Plug 'mxw/vim-jsx', { 'for': ['javascript', 'js', 'jsx', 'javascript.jsx']}
+-- 
+-- " Reason
+-- Plug 'reasonml-editor/vim-reason-plus'
+-- 
+-- " Purescript
+-- Plug 'purescript-contrib/purescript-vim'
+-- 
+-- 
+-- "Put your custom Vim configuration here
+-- ]])
+-- 
+-- vim.call('plug#end')
 
 -- Required for operations modifying multiple buffers like rename.
 -- https://neovim.io/doc/user/options.html#'hidden'

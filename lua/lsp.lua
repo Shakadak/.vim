@@ -35,6 +35,10 @@ vim.lsp.enable("ts_ls")
 vim.lsp.enable("cssls")
 vim.lsp.enable("jsonls")
 
+require("lsp.lua")
+
+require("lsp.gdscript")
+
 -- Idris2 config
 require('lsp/idris')
 
