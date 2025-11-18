@@ -19,7 +19,7 @@ vim.lsp.enable("elixirls")
 vim.lsp.enable("erlangls")
 vim.lsp.enable("purescriptls")
 
--- npm install --global typesript-language-server
+-- npm install --global typescript-language-server
 vim.lsp.config("ts_ls", {
   capabilities = capabilities,
   on_attach = function (client, bufnr)
@@ -32,7 +32,9 @@ vim.lsp.config("ts_ls", {
   end
 })
 vim.lsp.enable("ts_ls")
+-- npm install --global vscode-langservers-extracted
 vim.lsp.enable("cssls")
+-- npm install --global vscode-langservers-extracted
 vim.lsp.enable("jsonls")
 
 require("lsp.lua")
