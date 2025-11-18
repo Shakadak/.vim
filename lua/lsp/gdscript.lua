@@ -100,38 +100,6 @@ local function initialize(params)
   return new_params
 end
 
-local function willSaveWaitUntil(params)
-  local new_params = deepcopy(params)
-
-  new_params.textDocument.uri = onFileUri(params.textDocument.uri, toWPath)
-
-  return new_params
-end
-
-local function didSave(params)
-  local new_params = deepcopy(params)
-  new_params.textDocument.uri = onFileUri(params.textDocument.uri, toWPath)
-  return new_params
-end
-
-local function didOpen(params)
-  local new_params = deepcopy(params)
-  new_params.textDocument.uri = onFileUri(params.textDocument.uri, toWPath)
-  return new_params
-end
-
-local function didChange(params)
-  local new_params = deepcopy(params)
-  new_params.textDocument.uri = onFileUri(params.textDocument.uri, toWPath)
-  return new_params
-end
-
-local function didClose(params)
-  local new_params = deepcopy(params)
-  new_params.textDocument.uri = onFileUri(params.textDocument.uri, toWPath)
-  return new_params
-end
-
 local function publishDiagnostics(params)
   local new_params = deepcopy(params)
   new_params.uri = onFileUri(params.uri, toUPath)
@@ -155,26 +123,47 @@ local function defaultTransform(context)
   end
 end
 
+local function onParams(f)
+  return function (params)
+    return f(deepcopy(params))
+  end
+end
+
+local function textDocument_uri(f)
+  return onParams(function (params)
+    params.textDocument.uri = onFileUri(params.textDocument.uri, f)
+    -- local log = require('./debug')
+    -- log:write('uri.onParams', params)
+    return params
+  end)
+end
+
 local function identity(params)
   return params
 end
 
+-- Client ==> LSP
 local request_transform = {
   ['initialize'] = initialize,
-  ["textDocument/willSaveWaitUntil"] = willSaveWaitUntil,
   ["shutdown"] = identity,
+  ["textDocument/completion"] = textDocument_uri(toWPath),
+  ["textDocument/hover"] = textDocument_uri(toWPath),
+  ["textDocument/signatureHelp"] = textDocument_uri(toWPath),
+  ["textDocument/willSaveWaitUntil"] = textDocument_uri(toWPath),
 }
 setmetatable(request_transform, {__index = defaultTransform('request_transform')})
 
+-- Client ==> LSP
 local notify_transform = {
-  ["textDocument/didSave"] = didSave,
-  ["textDocument/didOpen"] = didOpen,
-  ["textDocument/didChange"] = didChange,
-  ["textDocument/didClose"] = didClose,
+  ["textDocument/didSave"] = textDocument_uri(toWPath),
+  ["textDocument/didOpen"] = textDocument_uri(toWPath),
+  ["textDocument/didChange"] = textDocument_uri(toWPath),
+  ["textDocument/didClose"] = textDocument_uri(toWPath),
   ["initialized"] = identity,
 }
 setmetatable(notify_transform, {__index = defaultTransform('notify_transform')})
 
+-- Client <== Server
 local notification_transform = {
   ["textDocument/publishDiagnostics"] = publishDiagnostics,
   ["gdscript_client/changeWorkspace"] = changeWorkspace,
@@ -182,6 +171,7 @@ local notification_transform = {
 }
 setmetatable(notification_transform, {__index = defaultTransform('notification_transform')})
 
+-- Client <== Server
 local server_request_transform = {
 }
 setmetatable(server_request_transform, {__index = defaultTransform('server_request_transform')})
