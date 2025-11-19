@@ -56,17 +56,21 @@ local function map(tbl, f)
     return t
 end
 
-local function onFileUri(str, f)
-  local prefix = "file://"
-  local prefix_len = string.len(prefix)
-  if string.sub(str, 1, prefix_len) == prefix then
-    -- local log = require('./debug')
-    -- log:write('((vim.uri_to_fname(str)))', ((vim.uri_to_fname(str))))
-    -- log:write('(f(vim.uri_to_fname(str)))', (f(vim.uri_to_fname(str))))
-    -- log:write('vim.uri_from_fname(f(vim.uri_to_fname(str)))', vim.uri_from_fname(f(vim.uri_to_fname(str))))
-    return vim.uri_from_fname(f(vim.uri_to_fname(str)))
+local function onFileUri(f, maybe_str)
+  local function run(str)
+    local prefix = "file://"
+    local prefix_len = string.len(prefix)
+    if string.sub(str, 1, prefix_len) == prefix then
+      return vim.uri_from_fname(f(vim.uri_to_fname(str)))
+    end
+    return str
   end
-  return str
+
+  if maybe_str == nil then
+    return run
+  else
+    return run(maybe_str)
+  end
 end
 
 local function toWPath(path)
@@ -79,30 +83,22 @@ end
 
 local function initialize(params)
   -- local log = require('./debug')
+  -- log:write('dbg.initialize', params)
+  params.rootPath = toWPath(params.rootPath)
+  params.rootUri = onFileUri(toWPath, params.rootUri)
 
-  -- TODO: handle file URIs `rootUri`, `workspaceFolders.uri`
-  -- TODO: maybe file URIs should be left as is
-
-  local new_params = deepcopy(params)
-
-  new_params.rootPath = toWPath(params.rootPath)
-  new_params.rootUri = onFileUri(params.rootUri, toWPath)
-
-  new_params.workspaceFolders = map(params.workspaceFolders, function (folder)
-    local new_folder = deepcopy(folder)
-    new_folder.name = toWPath(folder.name)
-    new_folder.uri = onFileUri(folder.uri, toWPath)
-    return new_folder
+  params.workspaceFolders = map(params.workspaceFolders, function (folder)
+    folder.name = toWPath(folder.name)
+    folder.uri = onFileUri(toWPath, folder.uri)
+    return folder
   end)
 
-  -- log:write('initialize.workspaceFoldersW', new_params.workspaceFolders)
-
-  return new_params
+  return params
 end
 
 local function publishDiagnostics(params)
   local new_params = deepcopy(params)
-  new_params.uri = onFileUri(params.uri, toUPath)
+  new_params.uri = onFileUri(toUPath, params.uri)
   return new_params
 end
 
@@ -114,60 +110,74 @@ local function changeWorkspace(params)
   return new_params
 end
 
-local function defaultTransform(context)
-  local log = require('./debug')
-  return function(_, method)
-    return function (params)
-      log:write(context, method, params)
-    end
-  end
-end
-
 local function onParams(f)
   return function (params)
     return f(deepcopy(params))
   end
 end
 
-local function textDocument_uri(f)
-  return onParams(function (params)
-    params.textDocument.uri = onFileUri(params.textDocument.uri, f)
-    -- local log = require('./debug')
-    -- log:write('uri.onParams', params)
+local function onKey(key, f)
+  return function (params)
+    params[key] = f(params[key])
     return params
-  end)
+  end
+end
+
+local function dbg(method, f)
+  return function (params)
+    local new_params = f(params)
+    local log = require('./debug')
+    log:write(method, new_params)
+    return new_params
+  end
+end
+
+local function textDocument_uri(f)
+  return onParams(onKey("textDocument", onKey("uri", onFileUri(f))))
 end
 
 local function identity(params)
   return params
 end
 
+local function defaultTransform(context)
+  local log = require('./debug')
+  return function(_, method)
+    return function (params)
+      log:write(context, method, params)
+      return params
+    end
+  end
+end
+
 -- Client ==> LSP
 local request_transform = {
-  ['initialize'] = initialize,
+  ["completionItem/resolve"] = onParams(onKey("data", textDocument_uri(toWPath))),
   ["shutdown"] = identity,
   ["textDocument/completion"] = textDocument_uri(toWPath),
+  ["textDocument/definition"] = dbg('textDocument/definition', textDocument_uri(toWPath)),
   ["textDocument/hover"] = textDocument_uri(toWPath),
   ["textDocument/signatureHelp"] = textDocument_uri(toWPath),
   ["textDocument/willSaveWaitUntil"] = textDocument_uri(toWPath),
+  ['initialize'] = onParams(initialize),
 }
 setmetatable(request_transform, {__index = defaultTransform('request_transform')})
 
 -- Client ==> LSP
 local notify_transform = {
-  ["textDocument/didSave"] = textDocument_uri(toWPath),
-  ["textDocument/didOpen"] = textDocument_uri(toWPath),
+  ["initialized"] = identity,
   ["textDocument/didChange"] = textDocument_uri(toWPath),
   ["textDocument/didClose"] = textDocument_uri(toWPath),
-  ["initialized"] = identity,
+  ["textDocument/didOpen"] = textDocument_uri(toWPath),
+  ["textDocument/didSave"] = textDocument_uri(toWPath),
 }
 setmetatable(notify_transform, {__index = defaultTransform('notify_transform')})
 
 -- Client <== Server
 local notification_transform = {
-  ["textDocument/publishDiagnostics"] = publishDiagnostics,
-  ["gdscript_client/changeWorkspace"] = changeWorkspace,
   ["gdscript/capabilities"] = identity,
+  ["gdscript_client/changeWorkspace"] = changeWorkspace,
+  ["textDocument/publishDiagnostics"] = publishDiagnostics,
 }
 setmetatable(notification_transform, {__index = defaultTransform('notification_transform')})
 
@@ -176,17 +186,73 @@ local server_request_transform = {
 }
 setmetatable(server_request_transform, {__index = defaultTransform('server_request_transform')})
 
+local function onResult(f)
+  return function (error, result)
+    if error ~= nil then
+      local log = require('./debug')
+      log:write("onResult.error", error)
+    end
+    return error, f(result)
+  end
+end
+
+local function onResults(f)
+  return function (error, results)
+    if error ~= nil then
+      local log = require('./debug')
+      log:write("onResults.error", error)
+    end
+    return error, map(results, f)
+  end
+end
+
+local function biIdentity(error, result)
+  if error ~= nil then
+    local log = require('./debug')
+    log:write("onResults.error", error)
+  end
+  return error, result
+end
+
+local function dbg2(method, f)
+  return function (error, result)
+    local new_error, new_params = f(error, result)
+    local log = require('./debug')
+    log:write(method, new_error, new_params)
+    return new_error, new_params
+  end
+end
+
+local function defaultCallbackTransform(context)
+  local log = require('./debug')
+  return function(_, method)
+    return function (error, result)
+      log:write(context, method, error, result)
+      return error, result
+    end
+  end
+end
+
+-- Client <== Server
+local request_callback_transform = {
+  ["completionItem/resolve"] = onResult(onKey("data", textDocument_uri(toUPath))),
+  ["initialize"] = biIdentity,
+  ["textDocument/completion"] = onResults(onKey("data", textDocument_uri(toUPath))),
+  ["textDocument/definition"] = dbg2("textDocument/definition", onResults(onKey("uri", onFileUri(toUPath)))),
+  ["textDocument/hover"] = biIdentity,
+  ["textDocument/signatureHelp"] = biIdentity,
+  ["textDocument/willSaveWaitUntil"] = biIdentity,
+}
+setmetatable(request_callback_transform, {__index = defaultCallbackTransform('request_callback_transform')})
+
 local port = os.getenv 'GDScript_Port' or '6005'
 local cmd = vim.lsp.rpc.connect('127.0.0.1', tonumber(port))
 local wrapper = function(dispatchers)
   -- log:write("dispatchers", dispatchers)
 
   local notification = function(method, params)
-    -- local log = require('./debug')
-    -- if select(1, method) ~= 'gdscript/capabilities' then
-    --   log:write('peach notification', method, params)
-    -- end
     local new_params = notification_transform[method](params)
+    -- local log = require('./debug')
     -- log:write('notification', method, new_params)
     dispatchers.notification(method, new_params)
   end
@@ -210,7 +276,7 @@ local wrapper = function(dispatchers)
   -- local log = require('./debug')
   -- log:write("public_client", public_client)
 
-  local request = function (method, params, callback, notify_reply_callback)
+  local function request(method, params, callback, notify_reply_callback)
     -- TODO: consider wrapping `callback` and `notify_reply_callback`
 
     local new_params = request_transform[method](params)
@@ -218,7 +284,12 @@ local wrapper = function(dispatchers)
       -- log:write('request', method, new_params, callback, notify_reply_callback)
     -- end
 
-    public_client.request(method, new_params, callback, notify_reply_callback)
+    local function new_callback(error, result)
+      local new_error, new_result = request_callback_transform[method](error, result)
+      return callback(new_error, new_result)
+    end
+
+    public_client.request(method, new_params, new_callback, notify_reply_callback)
   end
 
   local function notify(method, params)
