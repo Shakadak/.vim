@@ -56,6 +56,23 @@ local function map(tbl, f)
     return t
 end
 
+local wsl_path = {}
+
+function wsl_path.win_to_wsl(path)
+  path = path:gsub("\\", "/")
+
+  local drive, rest = path:match("^(%a):/(.*)$")
+  drive = drive:lower()
+  return "/mnt/" .. drive .. "/" .. rest
+end
+
+function wsl_path.wsl_to_win(path)
+  local drive, rest = path:match("^/mnt/(%a)/(.*)$")
+  drive = drive:upper()
+  rest = rest:gsub("/", "\\")
+  return drive .. ":\\" .. rest
+end
+
 local function onFileUri(f, maybe_str)
   local function run(str)
     local prefix = "file://"
@@ -74,11 +91,23 @@ local function onFileUri(f, maybe_str)
 end
 
 local function toWPath(path)
-  return vim.trim(vim.system({'wslpath', '-w', path}, { text = true }):wait().stdout)
+  -- local wslpath_result = vim.trim(vim.system({'wslpath', '-w', path}, { text = true }):wait().stdout)
+  -- local custom_result = wsl_path.wsl_to_win(path)
+  -- if wslpath_result ~= custom_result then
+  --   require("./debug"):write(string.format("toWPath divergence: %s <=> %s", wslpath_result, custom_result))
+  -- end
+  -- return wslpath_result
+  return wsl_path.wsl_to_win(path)
 end
 
 local function toUPath(path)
-  return vim.trim(vim.system({'wslpath', '-u', path}, { text = true }):wait().stdout)
+  -- local wslpath_result = vim.trim(vim.system({'wslpath', '-u', path}, { text = true }):wait().stdout)
+  -- local custom_result = wsl_path.win_to_wsl(path)
+  -- if wslpath_result ~= custom_result then
+  --   require("./debug"):write(string.format("toUPath divergence: %s <=> %s", wslpath_result, custom_result))
+  -- end
+  -- return wslpath_result
+  return wsl_path.win_to_wsl(path)
 end
 
 local function initialize(params)
@@ -123,6 +152,7 @@ local function onKey(key, f)
   end
 end
 
+--[[
 local function dbg(method, f)
   return function (params)
     local new_params = f(params)
@@ -131,6 +161,7 @@ local function dbg(method, f)
     return new_params
   end
 end
+--]]
 
 local function textDocument_uri(f)
   return onParams(onKey("textDocument", onKey("uri", onFileUri(f))))
@@ -155,7 +186,7 @@ local request_transform = {
   ["completionItem/resolve"] = onParams(onKey("data", textDocument_uri(toWPath))),
   ["shutdown"] = identity,
   ["textDocument/completion"] = textDocument_uri(toWPath),
-  ["textDocument/definition"] = dbg('textDocument/definition', textDocument_uri(toWPath)),
+  ["textDocument/definition"] = textDocument_uri(toWPath),
   ["textDocument/hover"] = textDocument_uri(toWPath),
   ["textDocument/signatureHelp"] = textDocument_uri(toWPath),
   ["textDocument/willSaveWaitUntil"] = textDocument_uri(toWPath),
@@ -209,11 +240,12 @@ end
 local function biIdentity(error, result)
   if error ~= nil then
     local log = require('./debug')
-    log:write("onResults.error", error)
+    log:write("biIdentity.error", error)
   end
   return error, result
 end
 
+--[[
 local function dbg2(method, f)
   return function (error, result)
     local new_error, new_params = f(error, result)
@@ -222,6 +254,7 @@ local function dbg2(method, f)
     return new_error, new_params
   end
 end
+--]]
 
 local function defaultCallbackTransform(context)
   local log = require('./debug')
@@ -238,7 +271,7 @@ local request_callback_transform = {
   ["completionItem/resolve"] = onResult(onKey("data", textDocument_uri(toUPath))),
   ["initialize"] = biIdentity,
   ["textDocument/completion"] = onResults(onKey("data", textDocument_uri(toUPath))),
-  ["textDocument/definition"] = dbg2("textDocument/definition", onResults(onKey("uri", onFileUri(toUPath)))),
+  ["textDocument/definition"] = onResults(onKey("uri", onFileUri(toUPath))),
   ["textDocument/hover"] = biIdentity,
   ["textDocument/signatureHelp"] = biIdentity,
   ["textDocument/willSaveWaitUntil"] = biIdentity,
