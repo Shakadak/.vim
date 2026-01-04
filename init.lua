@@ -56,10 +56,10 @@ call plug#end()
 
 -- Required for operations modifying multiple buffers like rename.
 -- https://neovim.io/doc/user/options.html#'hidden'
-vim.opt.hidden = true
+vim.o.hidden = true
 
-vim.opt.number = true
-vim.opt.cursorline = true
+vim.o.number = true
+vim.o.cursorline = true
 -- vim.opt.cursorcolumn = true
 -- vim.api.nvim_create_autocmd({"WinLeave"}, {
 --   callback = function() vim.opt.cursorcolumn = false end
@@ -68,9 +68,11 @@ vim.opt.cursorline = true
 --   callback = function() vim.opt.cursorcolumn = true end
 -- })
 
-vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 0
+vim.o.expandtab = true
+vim.o.tabstop = 2
+vim.o.shiftwidth = 0
+
+vim.o.completeopt = 'fuzzy,menuone,noinsert'
 
 -- https://neovim.io/doc/user/options.html#'termguicolors'
 -- vim.opt.termguicolors = true

@@ -18,6 +18,19 @@ vim.lsp.enable('hls')
 vim.lsp.enable("elixirls")
 vim.lsp.enable("erlangls")
 vim.lsp.enable("purescriptls")
+
+-- npm install --global typesript-language-server
+vim.lsp.config("ts_ls", {
+  capabilities = capabilities,
+  on_attach = function (client, bufnr)
+    vim.lsp.completion.enable(true, client.id, bufnr, {
+      autotrigger = true,
+      convert = function (item)
+        return { abbr = item.label:gsub('%b()', '') }
+      end
+    })
+  end
+})
 vim.lsp.enable("ts_ls")
 vim.lsp.enable("cssls")
 vim.lsp.enable("jsonls")
@@ -28,17 +41,13 @@ require('lsp/idris')
 vim.keymap.set('n', 'gD', vim.lsp.buf.implementation, {silent = true})
 vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
 vim.keymap.set('n', '1gD', vim.lsp.buf.type_definition, {silent = true})
--- vim.keymap.set('n', 'gr', vim.lsp.buf.refrences, {silent = true})
+-- vim.keymap.set('n', 'gr', vim.lsp.buf.references, {silent = true})
 vim.keymap.set('n', 'g0', vim.lsp.buf.document_symbol, {silent = true})
 vim.keymap.set('n', 'gW', vim.lsp.buf.workspace_symbol, {silent = true})
 vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, {silent = true})
 
 vim.keymap.set('n', '<c-]>', vim.lsp.buf.definition, { silent = true, })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { silent = true, })
-
-vim.keymap.set('n', '<leader>ep', vim.diagnostic.goto_prev, { silent = true, })
-vim.keymap.set('n', '<leader>en', vim.diagnostic.goto_next, { silent = true, })
-vim.keymap.set('n', '<leader>eo', vim.diagnostic.open_float, { silent = true, })
 
 vim.diagnostic.config({
     virtual_text = true,
