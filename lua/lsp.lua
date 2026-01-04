@@ -37,7 +37,7 @@ vim.lsp.enable("cssls")
 -- npm install --global vscode-langservers-extracted
 vim.lsp.enable("jsonls")
 
-require("lsp.lua")
+require("lsp/lua")
 
 require("lsp/gdscript")
 
