@@ -39,7 +39,7 @@ vim.lsp.enable("jsonls")
 
 require("lsp.lua")
 
-require("lsp.gdscript")
+require("lsp/gdscript")
 
 -- Idris2 config
 require('lsp/idris')
