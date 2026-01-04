@@ -44,16 +44,12 @@ require("lsp/gdscript")
 -- Idris2 config
 require('lsp/idris')
 
-vim.keymap.set('n', 'gD', vim.lsp.buf.implementation, {silent = true})
+-- see keymaps at:
+-- - https://neovim.io/doc/user/lsp.html#_defaults
+-- - https://neovim.io/doc/user/diagnostic.html#_defaults
 vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
-vim.keymap.set('n', '1gD', vim.lsp.buf.type_definition, {silent = true})
--- vim.keymap.set('n', 'gr', vim.lsp.buf.references, {silent = true})
-vim.keymap.set('n', 'g0', vim.lsp.buf.document_symbol, {silent = true})
 vim.keymap.set('n', 'gW', vim.lsp.buf.workspace_symbol, {silent = true})
 vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, {silent = true})
-
-vim.keymap.set('n', '<c-]>', vim.lsp.buf.definition, { silent = true, })
-vim.keymap.set('n', 'K', vim.lsp.buf.hover, { silent = true, })
 
 vim.diagnostic.config({
     virtual_text = true,
