@@ -1,3 +1,9 @@
+-- " Idris
+vim.pack.add({
+  { name = 'nui', src = 'https://github.com/MunifTanjim/nui.nvim' },
+  { name = 'idris2', src = 'https://github.com/idris-community/idris2-nvim'},
+})
+
 -- vim.lsp.enable("idris2_lsp")
 local function save_hook(action)
   vim.cmd('silent write')
@@ -16,5 +22,3 @@ local opts = {
 }
 
 require('idris2').setup(opts)
-
-

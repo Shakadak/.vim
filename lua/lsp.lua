@@ -18,6 +18,7 @@ vim.lsp.enable('hls')
 vim.lsp.enable("elixirls")
 vim.lsp.enable("erlangls")
 vim.lsp.enable("purescriptls")
+vim.lsp.enable("rust_analyzer")
 
 -- npm install --global typescript-language-server
 vim.lsp.config("ts_ls", {

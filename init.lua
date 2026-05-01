@@ -13,13 +13,13 @@
 -- disable modelines
 vim.o.modeline = false
 
+-- hints
+
+
 vim.pack.add({
   { src = 'https://github.com/neovim/nvim-lspconfig.git' },
 })
 
-vim.pack.add({
-  { src = 'https://github.com/shaunsingh/solarized.nvim.git', name = 'solarized' },
-})
 
 vim.pack.add({
   { src = 'https://github.com/hrsh7th/cmp-nvim-lsp.git', name = 'cmp_nvim_lsp' },
@@ -30,29 +30,8 @@ vim.pack.add({
   { src = 'https://github.com/mfussenegger/nvim-lint.git', name = 'lint' },
 })
 
-vim.api.nvim_create_autocmd({"PackChanged"}, {
-  callback = function(event)
-    local name = event.data.spec.name
-    local kind = event.data.kind
 
-    if name == 'nvim-treesitter' and (kind == 'install' or kind == 'update') then
-      if not event.data.active then
-        vim.cmd.packadd('nvim-treesitter')
-      end
-      vim.cmd('TSUpdate')
-    end
-  end
-})
 
-vim.pack.add({
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter.git' },
-})
-
--- " Idris
-vim.pack.add({
-  { name = 'nui', src = 'https://github.com/MunifTanjim/nui.nvim' },
-  { name = 'idris2', src = 'https://github.com/idris-community/idris2-nvim'},
-})
 
 -- Required for operations modifying multiple buffers like rename.
 -- https://neovim.io/doc/user/options.html#'hidden'
@@ -77,8 +56,6 @@ vim.o.completeopt = 'fuzzy,menuone,noinsert'
 -- https://neovim.io/doc/user/options.html#'termguicolors'
 -- vim.opt.termguicolors = true
 
--- Color Scheme
-require('solarized').set()
 
 -- Deferred config
 require('tree-sitter')
@@ -87,3 +64,5 @@ require('terminal')
 require('cmp-lsp')
 require('linters')
 require('fold')
+require('colorscheme-config')
+require('which-key-config')
