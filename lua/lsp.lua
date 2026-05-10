@@ -48,7 +48,7 @@ require('lsp/idris')
 -- see keymaps at:
 -- - https://neovim.io/doc/user/lsp.html#_defaults
 -- - https://neovim.io/doc/user/diagnostic.html#_defaults
-vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
+-- CTRL-S now -- vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
 vim.keymap.set('n', 'gW', vim.lsp.buf.workspace_symbol, {silent = true})
 vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, {silent = true})
 
