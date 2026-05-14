@@ -53,7 +53,6 @@ vim.api.nvim_create_autocmd('FileType', {
       return
     end
 
-    -- vim.treesitter.language.register("idris", "idris2")
     vim.treesitter.start()
   end,
 })

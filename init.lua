@@ -13,8 +13,9 @@
 -- disable modelines
 vim.o.modeline = false
 
--- hints
-
+vim.pack.add({
+  { src = 'https://github.com/nvim-mini/mini.nvim', version = 'main' }
+})
 
 vim.pack.add({
   { src = 'https://github.com/neovim/nvim-lspconfig.git' },
@@ -22,15 +23,8 @@ vim.pack.add({
 
 
 vim.pack.add({
-  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp.git', name = 'cmp_nvim_lsp' },
-  { src = 'https://github.com/hrsh7th/nvim-cmp.git', name = 'cmp' },
-})
-
-vim.pack.add({
   { src = 'https://github.com/mfussenegger/nvim-lint.git', name = 'lint' },
 })
-
-
 
 
 -- Required for operations modifying multiple buffers like rename.
@@ -51,17 +45,28 @@ vim.o.expandtab = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 0
 
-vim.o.completeopt = 'fuzzy,menuone,noinsert'
+vim.o.completeopt = 'fuzzy,menuone,noinsert,noselect,popup'
 
 -- https://neovim.io/doc/user/options.html#'termguicolors'
 -- vim.opt.termguicolors = true
 
+require('mini.icons').setup()
+require('mini.snippets').setup()
+require('mini.completion').setup()
+
+local MiniCompletion = require('mini.completion')
+local capabilities = MiniCompletion.get_lsp_capabilities()
+vim.lsp.config('*', {
+  capabilities = capabilities,
+})
+
+vim.lsp.log.set_level(vim.log.levels.DEBUG)
 
 -- Deferred config
 require('tree-sitter')
 require('lsp')
 require('terminal')
-require('cmp-lsp')
+-- require('cmp-lsp')
 require('linters')
 require('fold')
 require('colorscheme-config')

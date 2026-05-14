@@ -1,11 +1,11 @@
 -- Set up lspconfig.
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 vim.lsp.config("elixirls", {
   -- cmd = { "/home/nathanael/.local/bin/elixirls/language_server.sh" }
   cmd = { "elixir-ls" },
-  capabilities = capabilities,
+  -- capabilities = capabilities,
   settings = {
     elixirLS = {
       incrementalDialyzer = true,
@@ -17,12 +17,38 @@ vim.lsp.config("elixirls", {
 vim.lsp.enable('hls')
 vim.lsp.enable("elixirls")
 vim.lsp.enable("erlangls")
-vim.lsp.enable("purescriptls")
 vim.lsp.enable("rust_analyzer")
+
+-- npm install --global purescript-language-server
+local MiniCompletion = require('mini.completion')
+vim.lsp.config("purescriptls", {
+  root_dir = function (bufnr, on_dir)
+    on_dir(vim.fs.root(bufnr, {".git", "output"}))
+  end,
+  on_attach = function (client, bufnr)
+    vim.b[bufnr].minicompletion_config = {
+  lsp_completion = {
+    process_items = function(items, base)
+      -- Some LSP servers send null for string fields; Neovim decodes
+      -- JSON null as vim.NIL (userdata), which breaks string matching.
+      for _, item in ipairs(items) do
+        if item.filterText == vim.NIL then item.filterText = nil end
+        if item.sortText   == vim.NIL then item.sortText   = nil end
+        if item.label      == vim.NIL then item.label      = nil end
+        if item.insertText == vim.NIL then item.insetText  = nil end
+        if item.command    == vim.NIL then item.command    = nil end
+      end
+      return MiniCompletion.default_process_items(items, base)
+    end,
+  },
+}
+  end
+})
+vim.lsp.enable("purescriptls")
 
 -- npm install --global typescript-language-server
 vim.lsp.config("ts_ls", {
-  capabilities = capabilities,
+  -- capabilities = capabilities,
   on_attach = function (client, bufnr)
     vim.lsp.completion.enable(true, client.id, bufnr, {
       autotrigger = true,
