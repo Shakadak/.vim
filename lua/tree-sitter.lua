@@ -31,6 +31,7 @@ require('nvim-treesitter').install({
   "lua",
   "markdown",
   "nix",
+  "purescript",
   "rust",
   "tsx",
   "typescript",
@@ -48,7 +49,7 @@ vim.api.nvim_create_autocmd('FileType', {
     end
 
     -- Skip buffers without a filetype.
-    if filetype ~= "" then
+    if filetype == "" then
       return
     end
 
