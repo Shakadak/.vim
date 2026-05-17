@@ -16,7 +16,7 @@ vim.pack.add({
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter.git' },
 })
 
-require('nvim-treesitter').install({
+local languages = {
   "css",
   "eex",
   "elixir",
@@ -35,7 +35,14 @@ require('nvim-treesitter').install({
   "rust",
   "tsx",
   "typescript",
-})
+}
+
+local languages_map = {}
+for _, v in pairs(languages) do
+  languages_map[v] = true
+end
+
+require('nvim-treesitter').install(languages)
 
 vim.api.nvim_create_autocmd('FileType', {
   -- pattern = { '*' },
@@ -50,6 +57,10 @@ vim.api.nvim_create_autocmd('FileType', {
 
     -- Skip buffers without a filetype.
     if filetype == "" then
+      return
+    end
+
+    if not languages_map[filetype] then
       return
     end
 
