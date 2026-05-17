@@ -75,7 +75,7 @@ require('lsp/idris')
 -- - https://neovim.io/doc/user/diagnostic.html#_defaults
 -- CTRL-S now -- vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
 vim.keymap.set('n', 'gW', vim.lsp.buf.workspace_symbol, {silent = true})
-vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, {silent = true})
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {silent = true})
 
 vim.diagnostic.config({
     virtual_text = true,
