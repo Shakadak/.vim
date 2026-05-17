@@ -27,21 +27,20 @@ vim.lsp.config("purescriptls", {
   end,
   on_attach = function (client, bufnr)
     vim.b[bufnr].minicompletion_config = {
-  lsp_completion = {
-    process_items = function(items, base)
-      -- Some LSP servers send null for string fields; Neovim decodes
-      -- JSON null as vim.NIL (userdata), which breaks string matching.
-      for _, item in ipairs(items) do
-        if item.filterText == vim.NIL then item.filterText = nil end
-        if item.sortText   == vim.NIL then item.sortText   = nil end
-        if item.label      == vim.NIL then item.label      = nil end
-        if item.insertText == vim.NIL then item.insetText  = nil end
-        if item.command    == vim.NIL then item.command    = nil end
-      end
-      return MiniCompletion.default_process_items(items, base)
-    end,
-  },
-}
+      lsp_completion = {
+        process_items = function(items, base)
+          -- print('process_items ' .. vim.inspect(items))
+          -- Some LSP servers send null for string fields; Neovim decodes
+          -- JSON null as vim.NIL (userdata), which breaks string matching.
+          for _, item in ipairs(items) do
+            for k, v in pairs(item) do
+              if v == vim.NIL then item[k] = nil end
+            end
+          end
+          return MiniCompletion.default_process_items(items, base)
+        end,
+      },
+    }
   end
 })
 vim.lsp.enable("purescriptls")
