@@ -65,7 +65,7 @@ vim.lsp.enable("jsonls")
 
 require("lsp/lua")
 
-require("lsp/gdscript")
+vim.lsp.enable("gdscript")
 
 -- Idris2 config
 require('lsp/idris')
@@ -75,7 +75,7 @@ require('lsp/idris')
 -- - https://neovim.io/doc/user/diagnostic.html#_defaults
 -- CTRL-S now -- vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, {silent = true})
 vim.keymap.set('n', 'gW', vim.lsp.buf.workspace_symbol, {silent = true})
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {silent = true})
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {silent = true, desc = 'Go to definition'})
 
 vim.diagnostic.config({
     virtual_text = true,
