@@ -1,5 +1,10 @@
 {
   "plugins": {
+    "godot-lsp-wsl-bridge.nvim": {
+      "rev": "d8464f0273e8369bcbcbef1657c74b8a4eb2f104",
+      "src": "https://github.com/Shakadak/godot-lsp-wsl-bridge.nvim.git",
+      "version": "'v1.0.1'"
+    },
     "idris2": {
       "rev": "19dcf61737293365c23c890ca622fa34aeb12780",
       "src": "https://github.com/idris-community/idris2-nvim"
@@ -11,7 +16,7 @@
     "mini.nvim": {
       "rev": "17c448b0f3f29c0857a3436fc64e1d7cb9267ec3",
       "src": "https://github.com/nvim-mini/mini.nvim",
-      "version": "'main'"
+      "version": "'stable'"
     },
     "nightfox": {
       "rev": "ba47d4b4c5ec308718641ba7402c143836f35aa9",

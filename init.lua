@@ -14,7 +14,7 @@
 vim.o.modeline = false
 
 vim.pack.add({
-  { src = 'https://github.com/nvim-mini/mini.nvim', version = 'main' }
+  { src = 'https://github.com/nvim-mini/mini.nvim', version = 'stable' }
 })
 
 vim.pack.add({
@@ -24,6 +24,10 @@ vim.pack.add({
 
 vim.pack.add({
   { src = 'https://github.com/mfussenegger/nvim-lint.git', name = 'lint' },
+})
+
+vim.pack.add({
+  { src = 'https://github.com/Shakadak/godot-lsp-wsl-bridge.nvim.git', version = 'v1.0.1' },
 })
 
 
@@ -53,6 +57,7 @@ vim.o.completeopt = 'fuzzy,menuone,noinsert,noselect,popup'
 require('mini.icons').setup()
 require('mini.snippets').setup()
 require('mini.completion').setup()
+require('mini.surround').setup()
 
 local MiniCompletion = require('mini.completion')
 local capabilities = MiniCompletion.get_lsp_capabilities()
